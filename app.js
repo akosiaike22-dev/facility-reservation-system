@@ -2,6 +2,9 @@
 let currentUser = null;
 let currentRole = null;
 
+// Get Supabase client from window
+const supabase = window.supabase;
+
 // DOM Elements
 const loginPage = document.getElementById('login-page');
 const registerPage = document.getElementById('register-page');
