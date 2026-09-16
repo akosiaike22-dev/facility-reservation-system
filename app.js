@@ -66,11 +66,19 @@ function updateUserDisplay() {
 
 // Setup Event Listeners
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
     // Login Form
-    loginForm.addEventListener('submit', handleLogin);
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+        console.log('Login form listener attached');
+    }
     
     // Register Form
-    registerForm.addEventListener('submit', handleRegister);
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+        console.log('Register form listener attached');
+    }
     
     // Show Register
     document.getElementById('show-register').addEventListener('click', (e) => {
