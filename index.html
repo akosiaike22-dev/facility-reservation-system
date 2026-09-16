@@ -132,8 +132,14 @@
         // Initialize Supabase immediately after loading
         window.supabaseUrl = 'https://ibwuhyrylzgcxsbdeqsn.supabase.co';
         window.supabaseKey = 'sb_publishable_tz7N612mYAtGfxBWFTFHLg_KI4Lo6YD';
-        window.supabase = supabase.createClient(window.supabaseUrl, window.supabaseKey);
-        console.log('Supabase initialized:', window.supabase);
+        
+        if (typeof supabase !== 'undefined') {
+            window.supabase = supabase.createClient(window.supabaseUrl, window.supabaseKey);
+            console.log('Supabase initialized:', window.supabase);
+        } else {
+            console.error('Supabase library not loaded!');
+            alert('Error: Supabase library failed to load due to Tracking Prevention.\n\nPlease:\n1. Click the lock icon in the address bar\n2. Turn OFF "Tracking Prevention"\n3. Refresh the page\n\nOr use Chrome/Edge instead.');
+        }
     </script>
     <script src="app.js"></script>
 </body>

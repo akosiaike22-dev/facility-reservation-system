@@ -13,6 +13,15 @@ const modalBody = document.getElementById('modal-body');
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, checking Supabase...');
+    console.log('window.supabase:', window.supabase);
+    
+    if (!window.supabase) {
+        console.error('Supabase not initialized!');
+        showAlert('Error: Supabase library failed to load. Please disable tracking prevention or use a different browser.', 'error');
+        return;
+    }
+    
     checkAuth();
     setupEventListeners();
 });
