@@ -2,9 +2,6 @@
 let currentUser = null;
 let currentRole = null;
 
-// Get Supabase client from window
-const supabase = window.supabase;
-
 // DOM Elements
 const loginPage = document.getElementById('login-page');
 const registerPage = document.getElementById('register-page');
@@ -22,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Check Authentication
 async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await window.supabase.auth.getSession();
     
     if (session) {
         await loadUserProfile(session.user.id);
@@ -34,7 +31,7 @@ async function checkAuth() {
 
 // Load User Profile with Role
 async function loadUserProfile(userId) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabase
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
@@ -127,7 +124,7 @@ async function handleLogin(e) {
     const password = document.getElementById('password').value;
     
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await window.supabase.auth.signInWithPassword({
             email,
             password
         });
@@ -153,7 +150,7 @@ async function handleRegister(e) {
     
     try {
         // Create auth user
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        const { data: authData, error: authError } = await window.supabase.auth.signUp({
             email,
             password
         });
@@ -161,7 +158,7 @@ async function handleRegister(e) {
         if (authError) throw authError;
         
         // Create user profile
-        const { error: profileError } = await supabase
+        const { error: profileError } = await window.supabase
             .from('user_profiles')
             .insert({
                 id: authData.user.id,
@@ -185,7 +182,7 @@ async function handleRegister(e) {
 
 // Handle Logout
 async function handleLogout() {
-    await supabase.auth.signOut();
+    await window.supabase.auth.signOut();
     currentUser = null;
     currentRole = null;
     showLogin();
@@ -257,7 +254,7 @@ function showSection(section) {
 
 // Load Facilities
 async function loadFacilities() {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabase
         .from('facilities')
         .select('*')
         .order('name');
@@ -386,7 +383,7 @@ async function loadReservations() {
 
 // Load Users (Admin Only)
 async function loadUsers() {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabase
         .from('user_profiles')
         .select('*')
         .order('name');
@@ -430,7 +427,7 @@ async function loadUsers() {
 
 // Load Audit Logs (Admin Only)
 async function loadAuditLogs() {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabase
         .from('audit_logs')
         .select('*')
         .order('created_at', { ascending: false })
@@ -539,7 +536,7 @@ async function handleAddFacility(e) {
     };
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('facilities')
             .insert(facility);
         
@@ -559,7 +556,7 @@ async function handleAddFacility(e) {
 
 // Edit Facility
 async function editFacility(facilityId) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabase
         .from('facilities')
         .select('*')
         .eq('id', facilityId)
@@ -635,7 +632,7 @@ async function handleEditFacility(e, facilityId) {
     };
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('facilities')
             .update(facility)
             .eq('id', facilityId);
@@ -659,7 +656,7 @@ async function deleteFacility(facilityId) {
     if (!confirm('Are you sure you want to delete this facility?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('facilities')
             .delete()
             .eq('id', facilityId);
@@ -680,7 +677,7 @@ async function deleteFacility(facilityId) {
 // Show Add Reservation Modal
 async function showAddReservationModal() {
     // Load active facilities
-    const { data: facilities, error } = await supabase
+    const { data: facilities, error } = await window.supabase
         .from('facilities')
         .select('*')
         .eq('status', 'active')
@@ -741,7 +738,7 @@ async function handleAddReservation(e) {
     }
     
     // Business Rule: BR-B4-01 & BR-B4-08 - Check if facility is active and not under maintenance
-    const { data: facility, error: facilityError } = await supabase
+    const { data: facility, error: facilityError } = await window.supabase
         .from('facilities')
         .select('*')
         .eq('id', facilityId)
@@ -765,7 +762,7 @@ async function handleAddReservation(e) {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('reservations')
             .insert({
                 facility_id: facilityId,
@@ -792,7 +789,7 @@ async function handleAddReservation(e) {
 
 // Check Schedule Overlap
 async function checkScheduleOverlap(facilityId, startTime, endTime) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabase
         .from('reservations')
         .select('*')
         .eq('facility_id', facilityId)
@@ -846,7 +843,7 @@ async function approveReservation(reservationId) {
             return;
         }
         
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('reservations')
             .update({ status: 'approved' })
             .eq('id', reservationId);
@@ -875,7 +872,7 @@ async function rejectReservation(reservationId) {
     if (!reason) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('reservations')
             .update({ status: 'rejected', rejection_reason: reason })
             .eq('id', reservationId);
@@ -901,7 +898,7 @@ async function markInUse(reservationId) {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('reservations')
             .update({ status: 'in_use' })
             .eq('id', reservationId);
@@ -927,7 +924,7 @@ async function completeReservation(reservationId) {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('reservations')
             .update({ status: 'completed' })
             .eq('id', reservationId);
@@ -955,7 +952,7 @@ async function cancelReservation(reservationId) {
     if (!confirm('Are you sure you want to cancel this reservation?')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('reservations')
             .update({ status: 'cancelled' })
             .eq('id', reservationId)
@@ -982,7 +979,7 @@ async function editReservation(reservationId) {
     }
     
     // Business Rule: BR-B4-09 - Requesters may modify only their own Pending requests
-    const { data: reservation, error } = await supabase
+    const { data: reservation, error } = await window.supabase
         .from('reservations')
         .select('*')
         .eq('id', reservationId)
@@ -1004,7 +1001,7 @@ async function editReservation(reservationId) {
     }
     
     // Load facilities
-    const { data: facilities } = await supabase
+    const { data: facilities } = await window.supabase
         .from('facilities')
         .select('*')
         .eq('status', 'active')
@@ -1067,7 +1064,7 @@ async function handleEditReservation(e, reservationId) {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('reservations')
             .update({
                 facility_id: facilityId,
@@ -1098,7 +1095,7 @@ async function editUserRole(userId) {
         return;
     }
     
-    const { data: user, error } = await supabase
+    const { data: user, error } = await window.supabase
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
@@ -1140,7 +1137,7 @@ async function handleEditUserRole(e, userId) {
     const newRole = document.getElementById('edit-user-role').value;
     
     try {
-        const { error } = await supabase
+        const { error } = await window.supabase
             .from('user_profiles')
             .update({ role: newRole })
             .eq('id', userId);
