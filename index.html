@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Reservation System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Page -->
+        <div id="login-page" class="page">
+            <div class="login-container">
+                <h1>Facility Reservation System</h1>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <p class="register-link">Don't have an account? <a href="#" id="show-register">Register</a></p>
+            </div>
+        </div>
+
+        <!-- Registration Page -->
+        <div id="register-page" class="page hidden">
+            <div class="register-container">
+                <h1>Register</h1>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-role">Role</label>
+                        <select id="reg-role" required>
+                            <option value="requester">Requester</option>
+                            <option value="facility_staff">Facility Staff</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+                <p class="login-link">Already have an account? <a href="#" id="show-login">Login</a></p>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard-page" class="page hidden">
+            <nav class="navbar">
+                <div class="nav-brand">Facility Reservation</div>
+                <div class="nav-user">
+                    <span id="user-display"></span>
+                    <button id="logout-btn">Logout</button>
+                </div>
+            </nav>
+            
+            <div class="dashboard-content">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <nav class="sidebar-nav">
+                        <button class="nav-btn active" data-section="facilities">Facilities</button>
+                        <button class="nav-btn" data-section="reservations">Reservations</button>
+                        <button class="nav-btn admin-only" data-section="users">Users</button>
+                        <button class="nav-btn admin-only" data-section="audit-logs">Audit Logs</button>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <!-- Facilities Section -->
+                    <section id="facilities-section" class="content-section active">
+                        <div class="section-header">
+                            <h2>Facilities</h2>
+                            <button class="btn btn-primary admin-only" id="add-facility-btn">Add Facility</button>
+                        </div>
+                        <div id="facilities-list" class="facilities-grid"></div>
+                    </section>
+
+                    <!-- Reservations Section -->
+                    <section id="reservations-section" class="content-section">
+                        <div class="section-header">
+                            <h2>Reservations</h2>
+                            <button class="btn btn-primary" id="add-reservation-btn">New Reservation</button>
+                        </div>
+                        <div id="reservations-list" class="reservations-table"></div>
+                    </section>
+
+                    <!-- Users Section (Admin Only) -->
+                    <section id="users-section" class="content-section">
+                        <div class="section-header">
+                            <h2>Users</h2>
+                        </div>
+                        <div id="users-list" class="users-table"></div>
+                    </section>
+
+                    <!-- Audit Logs Section (Admin Only) -->
+                    <section id="audit-logs-section" class="content-section">
+                        <div class="section-header">
+                            <h2>Audit Logs</h2>
+                        </div>
+                        <div id="audit-logs-list" class="audit-logs-table"></div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
